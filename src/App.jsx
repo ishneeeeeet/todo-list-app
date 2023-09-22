@@ -4,6 +4,7 @@ import axios from "axios";
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [todo, setTodo] = useState("");
+  const [update, setUpdate] = useState(false)
 
   useEffect(() => {
     const fetchTodo = async () => {
@@ -30,11 +31,23 @@ function App() {
   };
 
   const handleDelete = async (id) => {
-    const response = await axios.delete(
-      `http://localhost:1337/api/todos/${id}`
-    );
-    console.log(response.data);
+    try {
+      const response = await axios.delete(
+        `http://localhost:1337/api/todos/${id}`
+      );
+      console.log(response.data);
+  
+      // Remove the deleted todo from the state
+      setTodoList(todoList.filter((todo) => todo.id !== id));
+    } catch (error) {
+      console.error("Error deleting todo:", error);
+    }
   };
+
+  const handleUpdate = () => {
+    
+  }
+  
   return (
     <>
       <div>
@@ -50,6 +63,7 @@ function App() {
           {todoList.map((todo) => (
             <li key={todo.id}>
               {todo.attributes.description}{" "}
+              <button >Edit</button>
               <button onClick={() => handleDelete(todo.id)}>Delete</button>
             </li>
           ))}
